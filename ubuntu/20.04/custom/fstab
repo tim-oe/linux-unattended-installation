@@ -1,0 +1,3 @@
+# TEC common net drive
+//tec-nas/clones /mnt/clones cifs guest,rw 0 0
+
