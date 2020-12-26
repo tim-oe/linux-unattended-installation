@@ -12,7 +12,7 @@ DIST_DIR="$CURRENT_DIR/dist"
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # get parameters
-if [ $1 = "force" ]; then
+if [ "$1" = "force" ]; then
     rm -vR "$DIST_DIR"
     SSH_PUBLIC_KEY_FILE="$HOME/.ssh/id_rsa.pub"
     TARGET_ISO="`pwd`/ubuntu-20.04-netboot-amd64-unattended.iso"
@@ -44,6 +44,23 @@ fi
 
 "$BIN_7Z" x "$DIST_DIR//netboot.iso" "-o$TMP_DISC_DIR"
 
+# get inputs
+read -ep " please enter your hostname: " -i "tec-desktop" HOST_NAME
+read -ep " please enter your preferred username: " -i "$( whoami)" USER_NAME
+read -sp " please enter your preferred password: " PWD1
+printf "\n"
+read -sp " confirm your preferred password: " PWD2
+printf "\n"
+
+# check if the passwords match to prevent headaches
+if [[ "$PWD1" != "$PWD2" ]]; then
+    echo " your passwords do not match; please restart the script and try again"
+    exit
+else
+    # generate the password hash
+    PWD_HASH=$(echo $PWD1 | mkpasswd -s -m sha-512)
+fi
+
 # patch boot menu
 cd "$TMP_DISC_DIR"
 dos2unix "./isolinux.cfg"
@@ -52,7 +69,13 @@ patch -p1 -i "$SCRIPT_DIR/custom/boot-menu.patch"
 # prepare assets
 cd "$TMP_INITRD_DIR"
 mkdir "./custom"
+
 cp "$SCRIPT_DIR/custom/preseed.cfg" "./preseed.cfg"
+# replace tokens
+sed -i "s@{{username}}@$USER_NAME@g" ./preseed.cfg
+sed -i "s@{{hash}}@$PWD_HASH@g" ./preseed.cfg
+sed -i "s@{{host}}@$HOST_NAME@g" ./preseed.cfg
+
 cp "$SSH_PUBLIC_KEY_FILE" "./custom/userkey.pub"
 cp "$SCRIPT_DIR/custom/ssh-host-keygen.service" "./custom/ssh-host-keygen.service"
 
@@ -83,4 +106,4 @@ rm -r "$TMP_DISC_DIR"
 rm -r "$TMP_INITRD_DIR"
 
 # done
-echo "Next steps: install system, login via root, adjust the authorized keys, set a root password (if you want to), deploy via ansible (if applicable), enjoy!"
+echo "Next steps: install system, login via $USER_NAME, enjoy!"
