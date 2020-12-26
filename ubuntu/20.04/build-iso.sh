@@ -85,6 +85,8 @@ cp "$SCRIPT_DIR/custom/.bash_aliases" "./custom/.bash_aliases"
 dos2unix "./custom/.bash_aliases"
 cp "$SCRIPT_DIR/custom/fstab" "./custom/fstab"
 dos2unix "./custom/fstab"
+cp "$SCRIPT_DIR/custom/init.sh" "./custom/init.sh"
+dos2unix "./custom/init.sh"
 
 # append assets to initrd image
 cd "$TMP_INITRD_DIR"
