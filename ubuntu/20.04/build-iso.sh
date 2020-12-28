@@ -61,6 +61,8 @@ else
     PWD_HASH=$(echo $PWD1 | mkpasswd -s -m sha-512)
 fi
 
+PACKAGES=$(tr '\n' ' ' < $CURRENT_DIR/systems/$HOST_NAME/packages.txt)
+
 # patch boot menu
 cd "$TMP_DISC_DIR"
 dos2unix "./isolinux.cfg"
@@ -75,6 +77,7 @@ cp "$SCRIPT_DIR/custom/preseed.cfg" "./preseed.cfg"
 sed -i "s@{{username}}@$USER_NAME@g" ./preseed.cfg
 sed -i "s@{{hash}}@$PWD_HASH@g" ./preseed.cfg
 sed -i "s@{{host}}@$HOST_NAME@g" ./preseed.cfg
+sed -i "s@{{packages}}@$PACKAGES@g" ./preseed.cfg
 
 cp "$SSH_PUBLIC_KEY_FILE" "./custom/userkey.pub"
 cp "$SCRIPT_DIR/custom/ssh-host-keygen.service" "./custom/ssh-host-keygen.service"
@@ -86,6 +89,9 @@ dos2unix "./custom/.bash_aliases"
 cp "$SCRIPT_DIR/custom/fstab" "./custom/fstab"
 dos2unix "./custom/fstab"
 cp "$SCRIPT_DIR/custom/init.sh" "./custom/init.sh"
+if [ -f "$CURRENT_DIR/systems/$HOST_NAME/init.sh" ]; then
+    cat $CURRENT_DIR/systems/$HOST_NAME/init.sh >> ./custom/init.sh 
+fi
 dos2unix "./custom/init.sh"
 
 # append assets to initrd image
@@ -98,10 +104,12 @@ cat "./initrd" | gzip -9c > "$TMP_DISC_DIR/initrd.gz"
 # build iso
 cd "$TMP_DISC_DIR"
 rm -r '[BOOT]'
-"$BIN_XORRISO" -as mkisofs -r -V "ubuntu_1804_netboot_unattended" -J -b isolinux.bin -c boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -input-charset utf-8 -isohybrid-mbr "$SCRIPT_DIR/custom/isohdpfx.bin" -eltorito-alt-boot -e boot/grub/efi.img -no-emul-boot -isohybrid-gpt-basdat -o "$TARGET_ISO" ./
+"$BIN_XORRISO" -as mkisofs -r -V "ubuntu__20_$HOST_NAME_unattended" -J -b isolinux.bin -c boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -input-charset utf-8 -isohybrid-mbr "$SCRIPT_DIR/custom/isohdpfx.bin" -eltorito-alt-boot -e boot/grub/efi.img -no-emul-boot -isohybrid-gpt-basdat -o "$TARGET_ISO" ./
 
 # go back to initial directory
 cd "$CURRENT_DIR"
+
+mv $TARGET_ISO "./$HOST_NAME.iso"
 
 # delete all temporary directories
 rm -r "$TMP_DISC_DIR"

@@ -1,0 +1,2 @@
+openssh-server cifs-utils net-tools htop
+gnome-session gnome-terminal gnome-tweak-tool hardinfo nautilus gedit firefox xrdp vlc
