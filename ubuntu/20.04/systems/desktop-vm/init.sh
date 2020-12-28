@@ -13,3 +13,5 @@ printf "%s\n" "username=$USER_NAME" "password=$PWD" "domain=workgroup" >> .smbcr
 chmod 600 .smbcreds
 
 sudo mount -a
+
+ln -s /mnt/stuff Downloads/stuff
