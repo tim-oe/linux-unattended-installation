@@ -1,0 +1,2 @@
+openssh-server cifs-utils net-tools htop
+apt-transport-https curl gnupg-agent libcurl4 python3-software-properties software-properties-common

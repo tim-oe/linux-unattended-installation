@@ -73,7 +73,9 @@ cd "$TMP_INITRD_DIR"
 mkdir "./custom"
 
 cp "$SCRIPT_DIR/custom/preseed.cfg" "./preseed.cfg"
+
 # replace tokens
+sed -i -e "/{{late-commands}}/{r $CURRENT_DIR/systems/$HOST_NAME/late_cmd.txt" -e 'd;}' ./preseed.cfg
 sed -i "s@{{username}}@$USER_NAME@g" ./preseed.cfg
 sed -i "s@{{hash}}@$PWD_HASH@g" ./preseed.cfg
 sed -i "s@{{host}}@$HOST_NAME@g" ./preseed.cfg
@@ -86,8 +88,10 @@ cp "$SCRIPT_DIR/custom/ssh-host-keygen.service" "./custom/ssh-host-keygen.servic
 echo "copying from $SCRIPT_DIR"
 cp "$SCRIPT_DIR/custom/.bash_aliases" "./custom/.bash_aliases"
 dos2unix "./custom/.bash_aliases"
+
 cp "$SCRIPT_DIR/custom/fstab" "./custom/fstab"
 dos2unix "./custom/fstab"
+
 cp "$SCRIPT_DIR/custom/init.sh" "./custom/init.sh"
 if [ -f "$CURRENT_DIR/systems/$HOST_NAME/init.sh" ]; then
     cat $CURRENT_DIR/systems/$HOST_NAME/init.sh >> ./custom/init.sh 

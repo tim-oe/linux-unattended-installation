@@ -1,5 +1,5 @@
 alias cls='printf "\033c"'
-alias gitagent='eval `ssh-agent -s`; ssh-add'
+alias gitagent='eval `ssh-agent -s`; ssh-add ~/.ssh/github_rsa'
 alias version='sudo lsb_release -a'
 alias vmclean='sudo apt autoremove --purge'
 alias dockerclean='docker system prune -a'

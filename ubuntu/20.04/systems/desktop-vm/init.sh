@@ -1,5 +1,7 @@
-# install shotcut
+#this did work in late command section
 sudo snap install shotcut --classic
+
+# install shotcut
 dconf write /org/gnome/shell/favorite-apps "['firefox.desktop','vlc.desktop','shotcut_shotcut.desktop','org.gnome.Terminal.desktop','org.gnome.Nautilus.desktop','yelp.desktop']"
 
 sudo mkdir -p /mnt/stuff

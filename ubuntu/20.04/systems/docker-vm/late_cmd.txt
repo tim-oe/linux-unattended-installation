@@ -1,0 +1,5 @@
+ in-target sh -c 'curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -'; \
+ in-target sh -c 'add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"'; \
+ in-target sh -c 'apt update'; \
+ in-target sh -c 'apt install -y docker-ce docker-ce-cli containerd.io docker-compose'; \
+ in-target sh -c 'usermod -aG docker {{username}}'; \
