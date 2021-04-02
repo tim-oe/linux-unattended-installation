@@ -1,0 +1,3 @@
+in-target sh -c 'usermod -aG libvirt {{username}}'; \
+in-target sh -c 'usermod -aG docker {{username}}'; \
+in-target sh -c 'systemctl enable --now libvirtd'; \

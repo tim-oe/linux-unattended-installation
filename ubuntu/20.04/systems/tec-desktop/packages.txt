@@ -1,3 +1,4 @@
-openssh-server cifs-utils net-tools htop
-gnome-session gnome-terminal gnome-tweak-tool hardinfo nautilus gedit firefox xrdp
+openssh-server cifs-utils net-tools htop mdadm
+gnome-session gnome-terminal gnome-tweak-tool gnome-power-manager
+hardinfo nautilus gedit firefox xrdp
 qemu qemu-kvm libvirt-daemon libvirt-clients bridge-utils virt-manager
